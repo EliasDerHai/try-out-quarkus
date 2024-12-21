@@ -1,8 +1,13 @@
-# try-out-quarkus
+# Try-out-quarkus
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## Database
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+For generating jOOQ classes run:
+
+```shell script
+./gradlew generateJooq
+```
+
 
 ## Running the application in dev mode
 

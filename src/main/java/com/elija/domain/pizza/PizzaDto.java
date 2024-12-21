@@ -1,4 +1,4 @@
-package com.elija.pizza;
+package com.elija.domain.pizza;
 
 import io.vavr.control.Option;
 
