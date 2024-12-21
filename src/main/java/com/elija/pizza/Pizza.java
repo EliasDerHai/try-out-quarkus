@@ -1,14 +1,12 @@
 package com.elija.pizza;
 
-
+import io.vavr.control.Option;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 @Getter
 @RequiredArgsConstructor
 public class Pizza {
     private final String name;
-    private final Optional<String> description;
+    private final Option<String> description;
 }
