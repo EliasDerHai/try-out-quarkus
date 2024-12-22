@@ -1,21 +1,9 @@
 package com.elija.domain.pizza;
 
-import jakarta.inject.Singleton;
-import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
+import io.vavr.collection.Set;
 
-import static com.example.generated.Tables.PIZZA;
+public interface PizzaRepository {
+    int save(Pizza pizza);
 
-@Singleton
-@RequiredArgsConstructor
-public class PizzaRepository implements PizzaPersistencePort {
-    private final DSLContext dsl;
-
-    @Override
-    public void save(com.elija.domain.pizza.Pizza pizza) {
-        dsl.insertInto(PIZZA)
-                .set(PIZZA.NAME, pizza.getName())
-                .set(PIZZA.DESCRIPTION, pizza.getDescription().getOrNull())
-                .execute();
-    }
+    Set<Pizza> findAll();
 }
