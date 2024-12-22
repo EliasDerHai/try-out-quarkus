@@ -33,6 +33,8 @@ dependencies {
     // vavr
     implementation("io.vavr:vavr:0.10.5")
     compileOnly("io.vavr:vavr-jackson:0.10.3")
+    testImplementation("io.vavr:vavr:0.10.5")
+    testImplementation("io.vavr:vavr-jackson:0.10.3")
 
     // db
     implementation("io.quarkus:quarkus-flyway:11.1.0")
@@ -70,9 +72,9 @@ jooq {
     version.set("3.18.5")
     configurations {
         create("main") {
-            // Kotlin DSL requires using jooqConfiguration.apply { ... }
+
             jooqConfiguration.apply {
-                // Optional logging level (DEBUG, INFO, WARN, ERROR)
+                // options = [DEBUG, INFO, WARN, ERROR]
                 // logging = org.jooq.meta.jaxb.Logging.INFO
 
                 jdbc.apply {
@@ -84,14 +86,10 @@ jooq {
                 generator.apply {
                     name = "org.jooq.codegen.JavaGenerator"
                     database.apply {
-                        // The schema from which to generate the code
                         inputSchema = "public"
                     }
                     target.apply {
-                        // Java package for generated code
-                        packageName = "com.example.generated"
-                        // Directory for generated sources
-                        directory = "${layout.buildDirectory}/generated-src/jooq/main"
+                        packageName = "com.elija.generated"
                     }
                 }
             }

@@ -2,10 +2,7 @@ package com.elija.infra.controller;
 
 import com.elija.domain.pizza.PizzaService;
 import io.vavr.collection.Set;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
@@ -21,22 +18,35 @@ class PizzaController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<PizzaDto> get() {
+    public Set<PizzaDto> getAll() {
         return pizzaService.getPizzas().map(PizzaDto::fromPizza);
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOne(@PathParam("id") int id) {
+        return pizzaService.getPizzaById(id)
+                .map(PizzaDto::fromPizza)
+                .map(p -> Response.ok(p).build())
+                .getOrElse(Response.status(404).build());
+    }
+
     @GET()
-    @Path("/samples")
+    @Path("/examples")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<PizzaDto> getSamples() {
-        return pizzaService.getSamplePizzas().map(PizzaDto::fromPizza);
+        return pizzaService.getSamplePizzas()
+                .map(PizzaDto::fromPizza);
     }
 
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response post(PizzaDto pizzaDto) {
-        var id = pizzaService.addPizza(pizzaDto.toPizza());
-        URI uriCreated = URI.create("%s/%d".formatted(PIZZA_URI, id));
-        return Response.created(uriCreated).build();
+        return pizzaService.addPizza(pizzaDto.toPizza())
+                .map(id -> URI.create("%s/%d".formatted(PIZZA_URI, id)))
+                .map(uri -> Response.created(uri).build())
+                .getOrElse(Response.serverError().build());
     }
 }

@@ -1,12 +1,15 @@
 package com.elija.domain.pizza;
 
 import io.vavr.collection.Set;
+import io.vavr.control.Option;
 
 public interface PizzaService {
 
-    int addPizza(Pizza pizza);
+    Option<Integer> addPizza(Pizza pizza);
 
     Set<Pizza> getPizzas();
+
+    Option<Pizza> getPizzaById(int id);
 
     Set<Pizza> getSamplePizzas();
 }

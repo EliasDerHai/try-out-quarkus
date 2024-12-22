@@ -12,13 +12,18 @@ import lombok.RequiredArgsConstructor;
     private final PizzaRepository repository;
 
     @Override
-    public int addPizza(Pizza pizza) {
+    public Option<Integer> addPizza(Pizza pizza) {
         return repository.save(pizza);
     }
 
     @Override
     public Set<Pizza> getPizzas() {
         return repository.findAll();
+    }
+
+    @Override
+    public Option<Pizza> getPizzaById(int id) {
+        return repository.find(id);
     }
 
     @Override
