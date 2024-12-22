@@ -36,7 +36,7 @@ class PizzaController {
     @Path("/examples")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<GetPizzaDto> getSamples() {
-        return pizzaService.getSamplePizzas()
+        return pizzaService.getExsamplePizzas()
                 .map(GetPizzaDto::fromPizza);
     }
 

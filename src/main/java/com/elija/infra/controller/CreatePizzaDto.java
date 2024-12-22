@@ -1,7 +1,7 @@
 package com.elija.infra.controller;
 
+import com.elija.domain.atomic.Price;
 import com.elija.domain.pizza.CreatePizzaCommand;
-import com.elija.domain.pizza.Price;
 import io.vavr.control.Option;
 
 import java.io.Serializable;

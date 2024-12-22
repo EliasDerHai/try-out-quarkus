@@ -1,5 +1,7 @@
 package com.elija.domain.pizza;
 
+import com.elija.domain.atomic.PizzaId;
+import com.elija.domain.atomic.Price;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 import io.vavr.control.Option;
@@ -27,12 +29,32 @@ class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
-    public Set<Pizza> getSamplePizzas() {
+    public Set<Pizza> getExsamplePizzas() {
         return HashSet.of(
-                new Pizza(1, "Margerita", Option.of("Tomatoes, Mozzarella - minimalistic"), Price.fromEuroCents(999)),
-                new Pizza(2, "Funghi", Option.of("Basically just Cheese and Champignons"), Price.fromEuroCents(999)),
-                new Pizza(3, "Quattro-Formaggi", Option.of("Cheese with cheese on-top of cheese-covered cheese"), Price.fromEuroCents(999)),
-                new Pizza(4, "Quattro-Stagioni", Option.none(), Price.fromEuroCents(999))
+                new Pizza(
+                        PizzaId.fromPrimitive(1),
+                        "Margerita",
+                        Option.of("Tomatoes, Mozzarella - minimalistic"),
+                        Price.fromEuroCents(999)
+                ),
+                new Pizza(
+                        PizzaId.fromPrimitive(2),
+                        "Funghi",
+                        Option.of("Basically just Cheese and Champignons"),
+                        Price.fromEuroCents(999)
+                ),
+                new Pizza(
+                        PizzaId.fromPrimitive(3),
+                        "Quattro-Formaggi",
+                        Option.of("Cheese with cheese on-top of cheese-covered cheese"),
+                        Price.fromEuroCents(999)
+                ),
+                new Pizza(
+                        PizzaId.fromPrimitive(4),
+                        "Quattro-Stagioni",
+                        Option.none(),
+                        Price.fromEuroCents(999)
+                )
         );
     }
 }

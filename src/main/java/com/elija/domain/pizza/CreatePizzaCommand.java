@@ -1,5 +1,6 @@
 package com.elija.domain.pizza;
 
+import com.elija.domain.atomic.Price;
 import io.vavr.control.Option;
 import lombok.NonNull;
 

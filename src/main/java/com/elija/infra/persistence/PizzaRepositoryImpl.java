@@ -1,9 +1,10 @@
 package com.elija.infra.persistence;
 
+import com.elija.domain.atomic.PizzaId;
+import com.elija.domain.atomic.Price;
 import com.elija.domain.pizza.CreatePizzaCommand;
 import com.elija.domain.pizza.Pizza;
 import com.elija.domain.pizza.PizzaRepository;
-import com.elija.domain.pizza.Price;
 import com.elija.generated.tables.records.PizzaRecord;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
@@ -46,9 +47,9 @@ class PizzaRepositoryImpl implements PizzaRepository {
                 .map(PizzaRepositoryImpl::recordToPizza);
     }
 
-    private static Pizza recordToPizza(org.jooq.Record record){
+    private static Pizza recordToPizza(org.jooq.Record record) {
         return new Pizza(
-                record.get(PIZZA.ID),
+                PizzaId.fromPrimitive(record.get(PIZZA.ID)),
                 record.get(PIZZA.NAME),
                 Option.of(record.get(PIZZA.DESCRIPTION)),
                 Price.fromEuroCents(record.get(PIZZA.PRICE))

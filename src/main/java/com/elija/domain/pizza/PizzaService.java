@@ -11,5 +11,5 @@ public interface PizzaService {
 
     Option<Pizza> getPizzaById(int id);
 
-    Set<Pizza> getSamplePizzas();
+    Set<Pizza> getExsamplePizzas();
 }
