@@ -1,0 +1,18 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    jdbc:
+      driver: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/try_out_jooq
+    password: postgres
+    username: postgres
+  jooq:
+    dialect: POSTGRES
+  flyway:
+    migrate-at-start: true
+    datasource:
+      db-kind: postgresql
+      username: postgres
+      password: postgres
+      jdbc:
+        url: jdbc:postgresql://localhost:5432/try_out_jooq

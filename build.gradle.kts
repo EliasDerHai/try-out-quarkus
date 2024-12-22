@@ -2,6 +2,7 @@ plugins {
     java
     id("io.quarkus")
     id("nu.studer.jooq") version "8.2"
+    id("org.flywaydb.flyway") version "11.1.0"
 }
 
 repositories {
@@ -14,10 +15,12 @@ val quarkusPlatformArtifactId: String by project
 val quarkusPlatformVersion: String by project
 
 dependencies {
+    // quarkus
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-rest")
+    implementation("io.quarkus:quarkus-config-yaml")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
 
@@ -32,6 +35,9 @@ dependencies {
     compileOnly("io.vavr:vavr-jackson:0.10.3")
 
     // db
+    implementation("io.quarkus:quarkus-flyway:11.1.0")
+    implementation("io.quarkus:quarkus-jdbc-postgresql:11.1.0")
+    implementation("org.flywaydb:flyway-database-postgresql:11.1.0")
     jooqGenerator("org.postgresql:postgresql:42.7.2")
     runtimeOnly("org.postgresql:postgresql:42.7.2")
     implementation("io.quarkiverse.jooq:quarkus-jooq:2.0.1")
@@ -51,6 +57,13 @@ tasks.withType<Test> {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
+}
+
+flyway {
+    driver = "org.postgresql.Driver"
+    url = "jdbc:postgresql://localhost:5432/try_out_jooq"
+    user = "postgres"
+    password = "postgres"
 }
 
 jooq {
@@ -83,5 +96,19 @@ jooq {
                 }
             }
         }
+    }
+}
+
+tasks.named("generateJooq").configure {
+    dependsOn("flywayMigrate")
+}
+
+/*
+ * https://github.com/flyway/flyway/issues/3774#issuecomment-1829245496
+ * took me ages. what a piece of junk...
+ */
+buildscript {
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:11.1.0")
     }
 }
