@@ -1,7 +1,9 @@
 package com.elija.infra.persistence;
 
+import com.elija.domain.pizza.CreatePizzaCommand;
 import com.elija.domain.pizza.Pizza;
 import com.elija.domain.pizza.PizzaRepository;
+import com.elija.domain.pizza.Price;
 import com.elija.generated.tables.records.PizzaRecord;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
@@ -18,12 +20,15 @@ class PizzaRepositoryImpl implements PizzaRepository {
     private final DSLContext dsl;
 
     @Override
-    public Option<Integer> save(Pizza pizza) {
-        var created = Option.of(dsl.insertInto(PIZZA)
-                .set(PIZZA.NAME, pizza.getName())
-                .set(PIZZA.DESCRIPTION, pizza.getDescription().getOrNull())
-                .returning(PIZZA.ID)
-                .fetchOne());
+    public Option<Integer> save(CreatePizzaCommand createPizzaCommand) {
+        var created = Option.of(
+                dsl.insertInto(PIZZA)
+                        .set(PIZZA.NAME, createPizzaCommand.name())
+                        .set(PIZZA.DESCRIPTION, createPizzaCommand.description().getOrNull())
+                        .set(PIZZA.PRICE, createPizzaCommand.price().inEuroCent())
+                        .returning(PIZZA.ID)
+                        .fetchOne()
+        );
 
         return created.map(PizzaRecord::getId);
     }
@@ -31,19 +36,22 @@ class PizzaRepositoryImpl implements PizzaRepository {
     @Override
     public Set<Pizza> findAll() {
         return HashSet.ofAll(dsl.select().from(PIZZA).fetch())
-                .map(record -> new Pizza(
-                        record.get(PIZZA.NAME),
-                        Option.of(record.get(PIZZA.DESCRIPTION))
-                ));
+                .map(PizzaRepositoryImpl::recordToPizza);
     }
 
     @Override
     public Option<Pizza> find(int id) {
         return Option
                 .of(dsl.select().from(PIZZA).where(PIZZA.ID.eq(id)).fetchOne())
-                .map(record -> new Pizza(
-                        record.get(PIZZA.NAME),
-                        Option.of(record.get(PIZZA.DESCRIPTION))
-                ));
+                .map(PizzaRepositoryImpl::recordToPizza);
+    }
+
+    private static Pizza recordToPizza(org.jooq.Record record){
+        return new Pizza(
+                record.get(PIZZA.ID),
+                record.get(PIZZA.NAME),
+                Option.of(record.get(PIZZA.DESCRIPTION)),
+                Price.fromEuroCents(record.get(PIZZA.PRICE))
+        );
     }
 }

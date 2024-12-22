@@ -8,12 +8,12 @@ import lombok.RequiredArgsConstructor;
 
 @Singleton
 @RequiredArgsConstructor
- class PizzaServiceImpl implements PizzaService {
+class PizzaServiceImpl implements PizzaService {
     private final PizzaRepository repository;
 
     @Override
-    public Option<Integer> addPizza(Pizza pizza) {
-        return repository.save(pizza);
+    public Option<Integer> addPizza(CreatePizzaCommand createPizzaCommand) {
+        return repository.save(createPizzaCommand);
     }
 
     @Override
@@ -29,10 +29,10 @@ import lombok.RequiredArgsConstructor;
     @Override
     public Set<Pizza> getSamplePizzas() {
         return HashSet.of(
-                new Pizza("Margerita", Option.of("Tomatoes, Mozzarella - minimalistic")),
-                new Pizza("Funghi", Option.of("Basically just Cheese and Champignons")),
-                new Pizza("Quattro-Formaggi", Option.of("Cheese with cheese on-top of cheese-covered cheese")),
-                new Pizza("Quattro-Stagioni", Option.none())
+                new Pizza(1, "Margerita", Option.of("Tomatoes, Mozzarella - minimalistic"), Price.fromEuroCents(999)),
+                new Pizza(2, "Funghi", Option.of("Basically just Cheese and Champignons"), Price.fromEuroCents(999)),
+                new Pizza(3, "Quattro-Formaggi", Option.of("Cheese with cheese on-top of cheese-covered cheese"), Price.fromEuroCents(999)),
+                new Pizza(4, "Quattro-Stagioni", Option.none(), Price.fromEuroCents(999))
         );
     }
 }

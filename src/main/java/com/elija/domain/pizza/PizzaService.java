@@ -5,7 +5,7 @@ import io.vavr.control.Option;
 
 public interface PizzaService {
 
-    Option<Integer> addPizza(Pizza pizza);
+    Option<Integer> addPizza(CreatePizzaCommand pizza);
 
     Set<Pizza> getPizzas();
 

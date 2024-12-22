@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Database credentials
+DB_USER="postgres"
+DB_PASS="postgres"
+DB_NAME="try_out_jooq"
+DB_HOST="localhost"
+
+# Export password for non-interactive login
+export PGPASSWORD=$DB_PASS
+
+echo "Dropping database: $DB_NAME"
+psql -h $DB_HOST -U $DB_USER -c "DROP DATABASE IF EXISTS $DB_NAME;" || {
+  echo "Failed to drop the database."
+  exit 1
+}
+
+echo "Creating database: $DB_NAME"
+psql -h $DB_HOST -U $DB_USER -c "CREATE DATABASE $DB_NAME;" || {
+  echo "Failed to create the database."
+  exit 1
+}
+
+echo "Database $DB_NAME has been reset."

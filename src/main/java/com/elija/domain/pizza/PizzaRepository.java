@@ -4,7 +4,7 @@ import io.vavr.collection.Set;
 import io.vavr.control.Option;
 
 public interface PizzaRepository {
-    Option<Integer> save(Pizza pizza);
+    Option<Integer> save(CreatePizzaCommand createPizzaCommand);
 
     Set<Pizza> findAll();
 
