@@ -1,7 +1,6 @@
 package com.elija.domain.pizza;
 
-import com.elija.domain.atomic.PizzaId;
-import com.elija.domain.atomic.Price;
+import com.elija.domain.shared.Price;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 import io.vavr.control.Option;
@@ -14,7 +13,7 @@ class PizzaServiceImpl implements PizzaService {
     private final PizzaRepository repository;
 
     @Override
-    public Option<Integer> addPizza(CreatePizzaCommand createPizzaCommand) {
+    public Option<PizzaId> addPizza(CreatePizzaCommand createPizzaCommand) {
         return repository.save(createPizzaCommand);
     }
 
@@ -29,7 +28,7 @@ class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
-    public Set<Pizza> getExsamplePizzas() {
+    public Set<Pizza> getExamplePizzas() {
         return HashSet.of(
                 new Pizza(
                         PizzaId.fromPrimitive(1),

@@ -5,11 +5,11 @@ import io.vavr.control.Option;
 
 public interface PizzaService {
 
-    Option<Integer> addPizza(CreatePizzaCommand pizza);
+    Option<PizzaId> addPizza(CreatePizzaCommand pizza);
 
     Set<Pizza> getPizzas();
 
     Option<Pizza> getPizzaById(int id);
 
-    Set<Pizza> getExsamplePizzas();
+    Set<Pizza> getExamplePizzas();
 }

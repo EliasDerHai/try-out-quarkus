@@ -1,4 +1,4 @@
-package com.elija.domain.person;
+package com.elija.domain.address;
 
 import lombok.NonNull;
 
@@ -6,11 +6,12 @@ import lombok.NonNull;
  * @param houseNumber is non-numeric since "2A" etc. is possible
  */
 public record Address(
+        @NonNull AddressId id,
         @NonNull String streetName,
         @NonNull String houseNumber,
         int zipCode,
         @NonNull String city,
-        long longitude,
-        long latitude
+        @NonNull Latitude latitude,
+        @NonNull Longitude longitude
 ) {
 }

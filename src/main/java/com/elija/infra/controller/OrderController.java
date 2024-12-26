@@ -22,18 +22,22 @@ class OrderController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response post(PlaceOrderDto placeOrderDto) {
-        return orderService.placeOrder(placeOrderDto.toPlaceOrderCommand())
+        return orderService
+                .placeOrder(placeOrderDto.toPlaceOrderCommand())
                 .fold(
-                // unhappy path
+                        // unhappy path
                         reason -> Response
                                 .status(Response.Status.CONFLICT)
                                 .entity(reason.toString())
                                 .build(),
-                // happy path
+                        // happy path
                         order -> Response
-                        .created(URI.create("%s/%d".formatted(ORDER_URI, order.id().toPrimitive())))
-                        .entity(order) // TODO convert to dto
-                        .build()
+                                .created(URI.create("%s/%d".formatted(
+                                        ORDER_URI,
+                                        order.id().toPrimitive()
+                                )))
+                                .entity(order) // TODO convert to dto
+                                .build()
                 );
     }
 }

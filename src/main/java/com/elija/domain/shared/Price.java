@@ -1,4 +1,4 @@
-package com.elija.domain.atomic;
+package com.elija.domain.shared;
 
 import java.text.NumberFormat;
 import java.util.Locale;

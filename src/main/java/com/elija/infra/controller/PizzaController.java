@@ -19,7 +19,8 @@ class PizzaController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Set<GetPizzaDto> getAll() {
-        return pizzaService.getPizzas().map(GetPizzaDto::fromPizza);
+        return pizzaService.getPizzas()
+                .map(GetPizzaDto::fromPizza);
     }
 
     @GET
@@ -36,7 +37,7 @@ class PizzaController {
     @Path("/examples")
     @Produces(MediaType.APPLICATION_JSON)
     public Set<GetPizzaDto> getSamples() {
-        return pizzaService.getExsamplePizzas()
+        return pizzaService.getExamplePizzas()
                 .map(GetPizzaDto::fromPizza);
     }
 
@@ -45,7 +46,7 @@ class PizzaController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response post(CreatePizzaDto pizzaDto) {
         return pizzaService.addPizza(pizzaDto.toCreatePizzaCommand())
-                .map(id -> URI.create("%s/%d".formatted(PIZZA_URI, id)))
+                .map(id -> URI.create("%s/%d".formatted(PIZZA_URI, id.toPrimitive())))
                 .map(uri -> Response.created(uri).build())
                 .getOrElse(Response.serverError().build());
     }

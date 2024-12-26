@@ -1,4 +1,4 @@
-package com.elija.domain.atomic;
+package com.elija.domain.person;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.elija.domain.atomic;
+package com.elija.domain.order;
 
 public record OrderId(int id) {
     public static OrderId fromPrimitive(int id) {

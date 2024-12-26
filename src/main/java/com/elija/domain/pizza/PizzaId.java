@@ -1,4 +1,4 @@
-package com.elija.domain.atomic;
+package com.elija.domain.pizza;
 
 public record PizzaId(int id) {
     public static PizzaId fromPrimitive(int id) {

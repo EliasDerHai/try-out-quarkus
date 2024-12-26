@@ -1,10 +1,10 @@
 package com.elija.infra.persistence;
 
-import com.elija.domain.atomic.PizzaId;
-import com.elija.domain.atomic.Price;
 import com.elija.domain.pizza.CreatePizzaCommand;
 import com.elija.domain.pizza.Pizza;
+import com.elija.domain.pizza.PizzaId;
 import com.elija.domain.pizza.PizzaRepository;
+import com.elija.domain.shared.Price;
 import com.elija.generated.tables.records.PizzaRecord;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
@@ -21,7 +21,7 @@ class PizzaRepositoryImpl implements PizzaRepository {
     private final DSLContext dsl;
 
     @Override
-    public Option<Integer> save(CreatePizzaCommand createPizzaCommand) {
+    public Option<PizzaId> save(CreatePizzaCommand createPizzaCommand) {
         var created = Option.of(
                 dsl.insertInto(PIZZA)
                         .set(PIZZA.NAME, createPizzaCommand.name())
@@ -31,7 +31,9 @@ class PizzaRepositoryImpl implements PizzaRepository {
                         .fetchOne()
         );
 
-        return created.map(PizzaRecord::getId);
+        return created
+                .map(PizzaRecord::getId)
+                .map(PizzaId::fromPrimitive);
     }
 
     @Override

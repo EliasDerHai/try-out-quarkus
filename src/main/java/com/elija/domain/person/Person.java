@@ -1,6 +1,5 @@
 package com.elija.domain.person;
 
-import com.elija.domain.atomic.PersonId;
 import io.vavr.control.Option;
 import lombok.NonNull;
 
