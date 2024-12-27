@@ -18,18 +18,16 @@ public class AddressRepositoryImpl implements AddressRepository {
 
     @Override
     public Option<AddressId> saveAddress(AddressDescriptionWithLatLong addressDescription) {
-        var created =Option.of( dsl.insertInto(ADDRESS)
-                .set(ADDRESS.CITY, addressDescription.city())
-                .set(ADDRESS.ZIP_CODE, addressDescription.zipCode())
-                .set(ADDRESS.STREET_NAME, addressDescription.streetName())
-                .set(ADDRESS.HOUSE_NUMBER, addressDescription.houseNumber())
-                .set(ADDRESS.LATITUDE, addressDescription.latitude().toPrimitive())
-                .set(ADDRESS.LONGITUDE, addressDescription.longitude().toPrimitive())
-                .returning(ADDRESS.ID)
-                .fetchOne());
-
-        return created
+        return Option.of(dsl.insertInto(ADDRESS)
+                        .set(ADDRESS.CITY, addressDescription.city())
+                        .set(ADDRESS.ZIP_CODE, addressDescription.zipCode())
+                        .set(ADDRESS.STREET_NAME, addressDescription.streetName())
+                        .set(ADDRESS.HOUSE_NUMBER, addressDescription.houseNumber())
+                        .set(ADDRESS.LATITUDE, addressDescription.latitude().toPrimitive())
+                        .set(ADDRESS.LONGITUDE, addressDescription.longitude().toPrimitive())
+                        .returning(ADDRESS.ID)
+                        .fetchOne())
                 .map(AddressRecord::getId)
-                .map(AddressId::fromPrimitive);
+                .map(AddressId::fromInt);
     }
 }

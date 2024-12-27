@@ -4,8 +4,10 @@ import com.elija.domain.address.AddressDescription;
 import com.elija.domain.order.PlaceOrderCommand;
 import com.elija.domain.person.PersonDescription;
 import com.elija.domain.pizza.PizzaId;
-import io.vavr.collection.Map;
+import io.vavr.collection.HashMap;
 import lombok.NonNull;
+
+import java.util.Map;
 
 /**
  * example:
@@ -19,12 +21,9 @@ import lombok.NonNull;
  *     "streetName": "street",
  *     "houseNumber": "2",
  *     "zipCode": 19232,
- *     "city": "RGB",
- *     "longitude": 9592,
- *     "latitude": 2957
+ *     "city": "RGB"
  *   },
  *   "orderer": {
- *     "id": "da1f6444-01e8-4d25-ab6d-7f2de267f3a5",
  *     "firstName": "John",
  *     "lastName": "Doe",
  *     "userGroup": "customer"
@@ -39,7 +38,7 @@ record PlaceOrderDto(
 ) {
     public PlaceOrderCommand toPlaceOrderCommand() {
         return new PlaceOrderCommand(
-                pizzaIdWithQuantity.mapKeys(PizzaId::fromPrimitive),
+                HashMap.ofAll(pizzaIdWithQuantity).mapKeys(PizzaId::fromInt),
                 new AddressDescription(
                         destination.streetName(),
                         destination.houseNumber(),

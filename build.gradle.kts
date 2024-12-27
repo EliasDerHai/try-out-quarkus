@@ -23,6 +23,7 @@ dependencies {
     implementation("io.quarkus:quarkus-config-yaml")
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")
+    implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
 
     // lombok
     compileOnly("org.projectlombok:lombok:1.18.36")

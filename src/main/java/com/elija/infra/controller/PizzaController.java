@@ -46,7 +46,7 @@ class PizzaController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response post(CreatePizzaDto pizzaDto) {
         return pizzaService.addPizza(pizzaDto.toCreatePizzaCommand())
-                .map(id -> URI.create("%s/%d".formatted(PIZZA_URI, id.toPrimitive())))
+                .map(id -> URI.create("%s/%d".formatted(PIZZA_URI, id.toInt())))
                 .map(uri -> Response.created(uri).build())
                 .getOrElse(Response.serverError().build());
     }

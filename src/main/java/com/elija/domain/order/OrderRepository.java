@@ -2,8 +2,6 @@ package com.elija.domain.order;
 
 import io.vavr.control.Option;
 
-public interface OrderService {
-
+public interface OrderRepository {
     Option<OrderId> saveOrder(OrderDescription orderDescription);
-
 }

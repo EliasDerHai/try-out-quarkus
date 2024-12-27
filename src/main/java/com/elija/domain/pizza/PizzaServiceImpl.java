@@ -31,25 +31,25 @@ class PizzaServiceImpl implements PizzaService {
     public Set<Pizza> getExamplePizzas() {
         return HashSet.of(
                 new Pizza(
-                        PizzaId.fromPrimitive(1),
+                        PizzaId.fromInt(1),
                         "Margerita",
                         Option.of("Tomatoes, Mozzarella - minimalistic"),
                         Price.fromEuroCents(999)
                 ),
                 new Pizza(
-                        PizzaId.fromPrimitive(2),
+                        PizzaId.fromInt(2),
                         "Funghi",
                         Option.of("Basically just Cheese and Champignons"),
                         Price.fromEuroCents(999)
                 ),
                 new Pizza(
-                        PizzaId.fromPrimitive(3),
+                        PizzaId.fromInt(3),
                         "Quattro-Formaggi",
                         Option.of("Cheese with cheese on-top of cheese-covered cheese"),
                         Price.fromEuroCents(999)
                 ),
                 new Pizza(
-                        PizzaId.fromPrimitive(4),
+                        PizzaId.fromInt(4),
                         "Quattro-Stagioni",
                         Option.none(),
                         Price.fromEuroCents(999)

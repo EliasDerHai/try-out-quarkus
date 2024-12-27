@@ -10,7 +10,10 @@ public enum OrderNotPlacedReason {
     DESTINATION_OUT_OF_DELIVERY_ZONE("destination-out-of-delivery-zone"),
 
     /** destination cannot be found via {@link AddressService#findLatitudeAndLongitudeForAddress(AddressDescription)} */
-    DESTINATION_UNKNOWN("destination-unknown");
+    DESTINATION_UNKNOWN("destination-unknown"),
+
+    /** something went wrong while persisting */
+    PERSISTENCE_ERROR("persistence-error");
 
     private final String value;
 }

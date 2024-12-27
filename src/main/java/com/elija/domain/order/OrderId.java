@@ -1,11 +1,11 @@
 package com.elija.domain.order;
 
 public record OrderId(int id) {
-    public static OrderId fromPrimitive(int id) {
+    public static OrderId fromInt(int id) {
         return new OrderId(id);
     }
 
-    public int toPrimitive() {
+    public int toInt() {
         return id;
     }
 }

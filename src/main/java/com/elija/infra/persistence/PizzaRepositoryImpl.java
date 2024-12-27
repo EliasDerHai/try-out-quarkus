@@ -22,18 +22,15 @@ class PizzaRepositoryImpl implements PizzaRepository {
 
     @Override
     public Option<PizzaId> save(CreatePizzaCommand createPizzaCommand) {
-        var created = Option.of(
-                dsl.insertInto(PIZZA)
+        return Option.of(dsl.insertInto(PIZZA)
                         .set(PIZZA.NAME, createPizzaCommand.name())
                         .set(PIZZA.DESCRIPTION, createPizzaCommand.description().getOrNull())
                         .set(PIZZA.PRICE, createPizzaCommand.price().inEuroCent())
                         .returning(PIZZA.ID)
                         .fetchOne()
-        );
-
-        return created
+                )
                 .map(PizzaRecord::getId)
-                .map(PizzaId::fromPrimitive);
+                .map(PizzaId::fromInt);
     }
 
     @Override
@@ -49,9 +46,16 @@ class PizzaRepositoryImpl implements PizzaRepository {
                 .map(PizzaRepositoryImpl::recordToPizza);
     }
 
+    @Override
+    public Option<Pizza> findByName(String name) {
+        return Option
+                .of(dsl.select().from(PIZZA).where(PIZZA.NAME.eq(name)).fetchOne())
+                .map(PizzaRepositoryImpl::recordToPizza);
+    }
+
     private static Pizza recordToPizza(org.jooq.Record record) {
         return new Pizza(
-                PizzaId.fromPrimitive(record.get(PIZZA.ID)),
+                PizzaId.fromInt(record.get(PIZZA.ID)),
                 record.get(PIZZA.NAME),
                 Option.of(record.get(PIZZA.DESCRIPTION)),
                 Price.fromEuroCents(record.get(PIZZA.PRICE))

@@ -4,7 +4,6 @@ import io.vavr.control.Option;
 import lombok.NonNull;
 
 record PersonDto(
-        @NonNull String id,
         @NonNull String firstName,
         @NonNull String lastName,
         @NonNull Option<String> phoneNumber,

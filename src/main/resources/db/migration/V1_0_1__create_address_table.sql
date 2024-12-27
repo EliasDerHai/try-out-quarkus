@@ -10,7 +10,7 @@ CREATE TABLE address (
 );
 
 CREATE TABLE person (
-	id varchar NOT NULL,
+	id UUID NOT NULL DEFAULT gen_random_uuid(),
 	first_name varchar NOT NULL,
 	last_name varchar NOT NULL,
 	phone_number varchar NULL,
@@ -21,9 +21,10 @@ CREATE TABLE person (
 CREATE TABLE customer_order (
 	id SERIAL4 NOT NULL,
     destination INTEGER NOT NULL,
-    orderer VARCHAR NOT NULL,
-    chef VARCHAR NOT NULL,
-    delivery_driver VARCHAR NOT NULL,
+    orderer UUID NOT NULL,
+    chef UUID NOT NULL,
+    delivery_driver UUID NOT NULL,
+    order_status VARCHAR NOT NULL,
     CONSTRAINT order_pk PRIMARY KEY (id),
     CONSTRAINT order_destination_fk
         FOREIGN KEY (destination)
@@ -37,4 +38,16 @@ CREATE TABLE customer_order (
     CONSTRAINT order_delivery_driver_fk
         FOREIGN KEY (delivery_driver)
         REFERENCES person(id)
+);
+
+CREATE TABLE customer_order_pizza (
+    order_id integer NOT NULL,
+    pizza_id integer NOT NULL,
+    quantity integer NOT NULL,
+    CONSTRAINT order_id_fk
+        FOREIGN KEY (order_id)
+        REFERENCES customer_order(id),
+    CONSTRAINT pizza_id_fk
+        FOREIGN KEY (pizza_id)
+        REFERENCES pizza(id)
 );

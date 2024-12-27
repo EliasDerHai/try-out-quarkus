@@ -7,8 +7,6 @@ import jakarta.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 
-import java.util.UUID;
-
 import static com.elija.generated.Tables.PERSON;
 
 @Singleton
@@ -18,35 +16,43 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Option<PersonId> savePerson(PersonDescriptionWithUserGroup personDescription) {
-        var created =Option.of( dsl.insertInto(PERSON)
+        return Option.of(dsl.insertInto(PERSON)
                 .set(PERSON.FIRST_NAME, personDescription.firstName())
                 .set(PERSON.LAST_NAME, personDescription.lastName())
                 .set(PERSON.PHONE_NUMBER, personDescription.phoneNumber().getOrNull())
                 .set(PERSON.USER_GROUP, personDescription.userGroup().getValue())
                 .returning(PERSON.ID)
-                .fetchOne());
-
-        return created
+                .fetchOne())
                 .map(PersonRecord::getId)
-                .map(UUID::fromString)
-                .map(PersonId::fromPrimitive);
+                .map(PersonId::fromUUID);
     }
 
     @Override
     public Option<Person> findPersonByFullName(String lastName, String firstName) {
-        var persisted = Option.of( dsl.select()
+        return Option.of(dsl.select()
                 .from(PERSON)
                 .where(PERSON.FIRST_NAME.eq(firstName))
                 .and(PERSON.LAST_NAME.eq(lastName))
-                .fetchOne());
+                .fetchOne())
+                .map(PersonRepositoryImpl::getPersonFromRecord);
+    }
 
-        return persisted
-                .map(r -> new Person(
-                        PersonId.fromPrimitive(UUID.fromString(r.get(PERSON.ID))),
-                        r.get(PERSON.FIRST_NAME),
-                        r.get(PERSON.LAST_NAME),
-                        Option.of(r.get(PERSON.PHONE_NUMBER)),
-                        UserGroup.fromValue(r.get(PERSON.USER_GROUP))
-                ));
+    @Override
+    public Option<Person> findLeastBusy(UserGroup userGroup) {
+        return Option.of(dsl.select()
+                .from(PERSON)
+                .where(PERSON.USER_GROUP.eq(userGroup.getValue()))
+                .fetchOne())
+                .map(PersonRepositoryImpl::getPersonFromRecord);
+    }
+
+    private static Person getPersonFromRecord(org.jooq.Record r) {
+        return new Person(
+                PersonId.fromUUID(r.get(PERSON.ID)),
+                r.get(PERSON.FIRST_NAME),
+                r.get(PERSON.LAST_NAME),
+                Option.of(r.get(PERSON.PHONE_NUMBER)),
+                UserGroup.fromValue(r.get(PERSON.USER_GROUP))
+        );
     }
 }
