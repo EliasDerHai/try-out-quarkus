@@ -1,10 +1,6 @@
 package com.elija.infra.persistence;
 
-import com.elija.domain.pizza.CreatePizzaCommand;
-import com.elija.domain.pizza.Pizza;
-import com.elija.domain.pizza.PizzaId;
-import com.elija.domain.pizza.PizzaRepository;
-import com.elija.domain.shared.Price;
+import com.elija.domain.pizza.*;
 import com.elija.generated.tables.records.PizzaRecord;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
@@ -21,11 +17,15 @@ class PizzaRepositoryImpl implements PizzaRepository {
     private final DSLContext dsl;
 
     @Override
-    public Option<PizzaId> save(CreatePizzaCommand createPizzaCommand) {
+    public Option<PizzaId> save(
+            PizzaName pizzaName,
+            PizzaDescription pizzaDescription,
+            Price price
+    ){
         return Option.of(dsl.insertInto(PIZZA)
-                        .set(PIZZA.NAME, createPizzaCommand.name())
-                        .set(PIZZA.DESCRIPTION, createPizzaCommand.description().getOrNull())
-                        .set(PIZZA.PRICE, createPizzaCommand.price().inEuroCent())
+                        .set(PIZZA.NAME, pizzaName.value())
+                        .set(PIZZA.DESCRIPTION, pizzaDescription.toNullableString())
+                        .set(PIZZA.PRICE, price.inEuroCent())
                         .returning(PIZZA.ID)
                         .fetchOne()
                 )
@@ -56,8 +56,8 @@ class PizzaRepositoryImpl implements PizzaRepository {
     private static Pizza recordToPizza(org.jooq.Record record) {
         return new Pizza(
                 PizzaId.fromInt(record.get(PIZZA.ID)),
-                record.get(PIZZA.NAME),
-                Option.of(record.get(PIZZA.DESCRIPTION)),
+                PizzaName.fromString(record.get(PIZZA.NAME)),
+                PizzaDescription.fromNullableString(record.get(PIZZA.DESCRIPTION)),
                 Price.fromEuroCents(record.get(PIZZA.PRICE))
         );
     }

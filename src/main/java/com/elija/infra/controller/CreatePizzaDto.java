@@ -1,7 +1,8 @@
 package com.elija.infra.controller;
 
-import com.elija.domain.pizza.CreatePizzaCommand;
-import com.elija.domain.shared.Price;
+import com.elija.domain.pizza.PizzaDescription;
+import com.elija.domain.pizza.PizzaName;
+import com.elija.domain.pizza.Price;
 import io.vavr.control.Option;
 
 import java.io.Serializable;
@@ -11,11 +12,15 @@ record CreatePizzaDto(
         Option<String> description,
         float price
 ) implements Serializable {
-    CreatePizzaCommand toCreatePizzaCommand() {
-        return new CreatePizzaCommand(
-                name,
-                description,
-                Price.fromEuroCents(Math.round(price * 100))
-        );
+    PizzaName getPizzaName() {
+        return PizzaName.fromString(name);
+    }
+
+    PizzaDescription getPizzaDescription() {
+        return PizzaDescription.fromOption(description);
+    }
+
+    Price getPrice() {
+        return Price.fromEuros(price);
     }
 }

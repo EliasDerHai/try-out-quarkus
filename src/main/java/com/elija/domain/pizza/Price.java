@@ -1,4 +1,4 @@
-package com.elija.domain.shared;
+package com.elija.domain.pizza;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -11,7 +11,13 @@ public record Price(int inEuroCent) {
         return formatter.format(inEuro);
     }
 
+    /** eg. 125 -> 12,50€ */
     public static Price fromEuroCents(int euroCents){
         return new Price(euroCents);
+    }
+
+    /** eg. 12.5 -> 12,50€ */
+    public static Price fromEuros(float euros) {
+        return Price.fromEuroCents(Math.round(euros * 100));
     }
 }

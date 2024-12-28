@@ -9,8 +9,8 @@ record GetPizzaDto(int id, String name, Option<String> description, String price
     public static GetPizzaDto fromPizza(Pizza pizza) {
         return new GetPizzaDto(
                 pizza.id().toInt(),
-                pizza.name(),
-                pizza.description(),
+                pizza.name().value(),
+                pizza.description().toOption(),
                 pizza.price().toString()
         );
     }

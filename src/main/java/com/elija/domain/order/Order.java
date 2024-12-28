@@ -8,7 +8,7 @@ import lombok.NonNull;
 
 
 public record Order(
-        OrderId id,
+        @NonNull OrderId id,
         @NonNull Map<PizzaId, Integer> pizzaIdWithQuantity,
         @NonNull Address destination,
         @NonNull Person orderer,
