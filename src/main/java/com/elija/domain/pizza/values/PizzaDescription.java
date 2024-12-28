@@ -1,4 +1,4 @@
-package com.elija.domain.pizza;
+package com.elija.domain.pizza.values;
 
 import io.vavr.control.Option;
 import lombok.NonNull;

@@ -1,8 +1,12 @@
 package com.elija.infra.persistence;
 
-import com.elija.domain.order.OrderDescription;
-import com.elija.domain.order.OrderId;
+import com.elija.domain.address.values.AddressId;
 import com.elija.domain.order.OrderRepository;
+import com.elija.domain.order.values.OrderId;
+import com.elija.domain.order.values.OrderState;
+import com.elija.domain.person.values.PersonId;
+import com.elija.domain.pizza.values.PizzaId;
+import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
@@ -19,20 +23,27 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     @Transactional
-    public Option<OrderId> saveOrder(OrderDescription orderDescription) {
+    public Option<OrderId> saveOrder(
+            Map<PizzaId, Integer> pizzaIdWithQuantity,
+            AddressId destination,
+            PersonId orderer,
+            PersonId chef,
+            PersonId deliveryDriver,
+            OrderState orderState
+    ) {
         var orderId = Option.of(dslContext.insertInto(CUSTOMER_ORDER)
-                        .set(CUSTOMER_ORDER.ORDERER, orderDescription.orderer().toUUID())
-                        .set(CUSTOMER_ORDER.CHEF, orderDescription.chef().toUUID())
-                        .set(CUSTOMER_ORDER.DELIVERY_DRIVER, orderDescription.deliveryDriver().toUUID())
-                        .set(CUSTOMER_ORDER.DESTINATION, orderDescription.destination().toInt())
-                        .set(CUSTOMER_ORDER.ORDER_STATUS, orderDescription.orderState().getValue())
+                        .set(CUSTOMER_ORDER.DESTINATION, destination.toInt())
+                        .set(CUSTOMER_ORDER.ORDERER, orderer.toUUID())
+                        .set(CUSTOMER_ORDER.CHEF, chef.toUUID())
+                        .set(CUSTOMER_ORDER.DELIVERY_DRIVER, deliveryDriver.toUUID())
+                        .set(CUSTOMER_ORDER.ORDER_STATUS, orderState.getValue())
                         .returning()
                         .fetchOne()
                 )
                 .map(r -> r.get(CUSTOMER_ORDER.ID))
                 .map(OrderId::fromInt);
 
-        orderId.forEach(id -> orderDescription.pizzaIdWithQuantity().forEach(((pizzaId, quantity) -> {
+        orderId.forEach(id -> pizzaIdWithQuantity.forEach(((pizzaId, quantity) -> {
             dslContext.insertInto(CUSTOMER_ORDER_PIZZA)
                     .set(CUSTOMER_ORDER_PIZZA.ORDER_ID, id.toInt())
                     .set(CUSTOMER_ORDER_PIZZA.PIZZA_ID, pizzaId.toInt())

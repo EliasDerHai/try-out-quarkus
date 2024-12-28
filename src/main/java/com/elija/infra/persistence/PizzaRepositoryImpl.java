@@ -1,6 +1,11 @@
 package com.elija.infra.persistence;
 
-import com.elija.domain.pizza.*;
+import com.elija.domain.pizza.Pizza;
+import com.elija.domain.pizza.PizzaRepository;
+import com.elija.domain.pizza.values.PizzaDescription;
+import com.elija.domain.pizza.values.PizzaId;
+import com.elija.domain.pizza.values.PizzaName;
+import com.elija.domain.pizza.values.Price;
 import com.elija.generated.tables.records.PizzaRecord;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;

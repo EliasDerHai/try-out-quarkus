@@ -1,13 +1,13 @@
 package com.elija.domain.person;
 
-import io.vavr.control.Option;
+import com.elija.domain.person.values.*;
 import lombok.NonNull;
 
 public record Person(
         @NonNull PersonId id,
-        @NonNull String firstName,
-        @NonNull String lastName,
-        @NonNull Option<String> phoneNumber,
+        @NonNull FirstName firstName,
+        @NonNull LastName lastName,
+        @NonNull PhoneNumber phoneNumber,
         @NonNull UserGroup userGroup
-        ) {
+) {
 }

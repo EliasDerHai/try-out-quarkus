@@ -2,11 +2,13 @@ package com.elija.domain.order;
 
 import com.elija.domain.address.Address;
 import com.elija.domain.address.AddressService;
-import com.elija.domain.address.Latitude;
-import com.elija.domain.address.Longitude;
+import com.elija.domain.address.values.Latitude;
+import com.elija.domain.address.values.Longitude;
+import com.elija.domain.order.values.OrderNotPlacedReason;
+import com.elija.domain.order.values.OrderState;
 import com.elija.domain.person.Person;
 import com.elija.domain.person.PersonService;
-import com.elija.domain.person.UserGroup;
+import com.elija.domain.person.values.UserGroup;
 import io.vavr.control.Either;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
@@ -24,7 +26,10 @@ public class PlaceOrderFacadeImpl implements PlaceOrderFacade {
     @Transactional
     public Either<OrderNotPlacedReason, Order> placeOrder(PlaceOrderCommand placeOrderCommand) {
         var latLong = addressService.findLatitudeAndLongitudeForAddress(
-                placeOrderCommand.destination()
+                placeOrderCommand.destination()._1,
+                placeOrderCommand.destination()._2,
+                placeOrderCommand.destination()._3,
+                placeOrderCommand.destination()._4
         );
 
         if (latLong.isEmpty()) {
@@ -33,24 +38,32 @@ public class PlaceOrderFacadeImpl implements PlaceOrderFacade {
 
         var destinationLatitude = latLong.get()._1;
         var destinationLongitude = latLong.get()._2;
-        var vendorLatitude = Latitude.fromPrimitive(Math.random());
-        var vendorLongitude = Longitude.fromPrimitive(Math.random());
+        var vendorLatitude = Latitude.fromDouble(Math.random());
+        var vendorLongitude = Longitude.fromDouble(Math.random());
 
         var distance = addressService.getDistanceBetween(vendorLatitude, vendorLongitude, destinationLatitude, destinationLongitude);
         if (distance > 42) {
             return Either.left(OrderNotPlacedReason.DESTINATION_OUT_OF_DELIVERY_ZONE);
         }
 
-        var addressDescription = placeOrderCommand
-                .destination()
-                .enhanceLatLong(destinationLatitude, destinationLongitude);
-
-        var addressId = addressService.createAddress(addressDescription);
-        var customerId = personService.addPerson(placeOrderCommand.orderer(), UserGroup.CUSTOMER);
+        var addressId = addressService.createAddress(
+                placeOrderCommand.destination()._1,
+                placeOrderCommand.destination()._2,
+                placeOrderCommand.destination()._3,
+                placeOrderCommand.destination()._4,
+                destinationLatitude,
+                destinationLongitude
+        ); // TODO fix later
+        var customerId = personService.addPerson(
+                placeOrderCommand.orderer()._1,
+                placeOrderCommand.orderer()._2,
+                placeOrderCommand.orderer()._3,
+                UserGroup.CUSTOMER
+        );
         var chef = personService.getLeastBusyChef();
         var deliveryDriver = personService.getLeastBusyDeliveryDriver();
 
-        var orderDescription = new OrderDescription(
+        var orderId = orderRepository.saveOrder(
                 placeOrderCommand.pizzaIdWithQuantity(),
                 addressId.getOrElseThrow(() -> new IllegalStateException("Address not available")),
                 customerId.getOrElseThrow(() -> new IllegalStateException("Customer not available")),
@@ -59,26 +72,24 @@ public class PlaceOrderFacadeImpl implements PlaceOrderFacade {
                 OrderState.PLACED
         );
 
-        var orderId = orderRepository.saveOrder(orderDescription);
-
         return orderId
                 .map(id -> new Order(
                         id,
                         placeOrderCommand.pizzaIdWithQuantity(),
                         new Address(
                                 addressId.get(),
-                                addressDescription.streetName(),
-                                addressDescription.houseNumber(),
-                                addressDescription.zipCode(),
-                                addressDescription.city(),
-                                addressDescription.latitude(),
-                                addressDescription.longitude()
+                                placeOrderCommand.destination()._1,
+                                placeOrderCommand.destination()._2,
+                                placeOrderCommand.destination()._3,
+                                placeOrderCommand.destination()._4,
+                                destinationLatitude,
+                                destinationLongitude
                         ),
                         new Person(
                                 customerId.get(),
-                                placeOrderCommand.orderer().firstName(),
-                                placeOrderCommand.orderer().lastName(),
-                                placeOrderCommand.orderer().phoneNumber(),
+                                placeOrderCommand.orderer()._1,
+                                placeOrderCommand.orderer()._2,
+                                placeOrderCommand.orderer()._3,
                                 UserGroup.CUSTOMER
                         ),
                         chef.get(),

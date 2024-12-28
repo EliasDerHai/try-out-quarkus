@@ -1,9 +1,15 @@
 package com.elija.infra.controller;
 
-import com.elija.domain.address.AddressDescription;
+import com.elija.domain.address.values.City;
+import com.elija.domain.address.values.House;
+import com.elija.domain.address.values.Street;
+import com.elija.domain.address.values.ZipCode;
 import com.elija.domain.order.PlaceOrderCommand;
-import com.elija.domain.person.PersonDescription;
-import com.elija.domain.pizza.PizzaId;
+import com.elija.domain.person.values.FirstName;
+import com.elija.domain.person.values.LastName;
+import com.elija.domain.person.values.PhoneNumber;
+import com.elija.domain.pizza.values.PizzaId;
+import io.vavr.Tuple;
 import io.vavr.collection.HashMap;
 import lombok.NonNull;
 
@@ -39,16 +45,16 @@ record PlaceOrderDto(
     public PlaceOrderCommand toPlaceOrderCommand() {
         return new PlaceOrderCommand(
                 HashMap.ofAll(pizzaIdWithQuantity).mapKeys(PizzaId::fromInt),
-                new AddressDescription(
-                        destination.streetName(),
-                        destination.houseNumber(),
-                        destination.zipCode(),
-                        destination.city()
+                Tuple.of(
+                        Street.fromString(destination.streetName()),
+                        House.fromString(destination.houseNumber()),
+                        ZipCode.fromInteger(destination.zipCode()),
+                        City.fromString(destination.city())
                 ),
-                new PersonDescription(
-                        orderer.firstName(),
-                        orderer.lastName(),
-                        orderer.phoneNumber()
+                Tuple.of(
+                        FirstName.fromString(orderer.firstName()),
+                        LastName.fromString(orderer.lastName()),
+                        PhoneNumber.fromOption(orderer.phoneNumber())
                 )
         );
     }

@@ -1,8 +1,7 @@
 package com.elija.infra.persistence;
 
-import com.elija.domain.address.AddressDescriptionWithLatLong;
-import com.elija.domain.address.AddressId;
 import com.elija.domain.address.AddressRepository;
+import com.elija.domain.address.values.*;
 import com.elija.generated.tables.records.AddressRecord;
 import io.vavr.control.Option;
 import jakarta.inject.Singleton;
@@ -17,14 +16,21 @@ public class AddressRepositoryImpl implements AddressRepository {
     private final DSLContext dsl;
 
     @Override
-    public Option<AddressId> saveAddress(AddressDescriptionWithLatLong addressDescription) {
+    public Option<AddressId> saveAddress(
+            Street street,
+            House house,
+            ZipCode zipCode,
+            City city,
+            Latitude latitude,
+            Longitude longitude
+    ) {
         return Option.of(dsl.insertInto(ADDRESS)
-                        .set(ADDRESS.CITY, addressDescription.city())
-                        .set(ADDRESS.ZIP_CODE, addressDescription.zipCode())
-                        .set(ADDRESS.STREET_NAME, addressDescription.streetName())
-                        .set(ADDRESS.HOUSE_NUMBER, addressDescription.houseNumber())
-                        .set(ADDRESS.LATITUDE, addressDescription.latitude().toPrimitive())
-                        .set(ADDRESS.LONGITUDE, addressDescription.longitude().toPrimitive())
+                        .set(ADDRESS.CITY, city.toString())
+                        .set(ADDRESS.ZIP_CODE, zipCode.toInt())
+                        .set(ADDRESS.STREET_NAME, street.toString())
+                        .set(ADDRESS.HOUSE_NUMBER, house.toString())
+                        .set(ADDRESS.LATITUDE, latitude.toDouble())
+                        .set(ADDRESS.LONGITUDE, longitude.toDouble())
                         .returning(ADDRESS.ID)
                         .fetchOne())
                 .map(AddressRecord::getId)

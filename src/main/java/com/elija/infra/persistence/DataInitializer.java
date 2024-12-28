@@ -1,12 +1,13 @@
 package com.elija.infra.persistence;
 
-import com.elija.domain.person.PersonDescriptionWithUserGroup;
-import com.elija.domain.person.UserGroup;
-import com.elija.domain.pizza.PizzaDescription;
-import com.elija.domain.pizza.PizzaName;
-import com.elija.domain.pizza.Price;
+import com.elija.domain.person.values.FirstName;
+import com.elija.domain.person.values.LastName;
+import com.elija.domain.person.values.PhoneNumber;
+import com.elija.domain.person.values.UserGroup;
+import com.elija.domain.pizza.values.PizzaDescription;
+import com.elija.domain.pizza.values.PizzaName;
+import com.elija.domain.pizza.values.Price;
 import io.quarkus.runtime.StartupEvent;
-import io.vavr.control.Option;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.transaction.Transactional;
@@ -88,21 +89,21 @@ public class DataInitializer {
     private int insertSamplePersons() {
         var inserts = 0;
         if (personRepository.findPersonByFullName("Parmigiano", "Luigi").isEmpty()) {
-            personRepository.savePerson(new PersonDescriptionWithUserGroup(
-                    "Luigi",
-                    "Parmigiano",
-                    Option.of("1234-567890"),
+            personRepository.savePerson(
+                    FirstName.fromString("Luigi"),
+                    LastName.fromString("Parmigiano"),
+                    PhoneNumber.fromNullableString("1234-567890"),
                     UserGroup.CHEF
-            ));
+            );
             inserts++;
         }
         if (personRepository.findPersonByFullName("Parmigiano", "Mario").isEmpty()) {
-            personRepository.savePerson(new PersonDescriptionWithUserGroup(
-                    "Mario",
-                    "Parmigiano",
-                    Option.of("0987-654321"),
+            personRepository.savePerson(
+                    FirstName.fromString("Mario"),
+                    LastName.fromString("Parmigiano"),
+                    PhoneNumber.fromNullableString("0987-654321"),
                     UserGroup.DELIVERY_DRIVER
-            ));
+            );
             inserts++;
         }
         return inserts;

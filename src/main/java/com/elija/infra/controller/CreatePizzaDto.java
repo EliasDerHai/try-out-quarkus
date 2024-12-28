@@ -1,8 +1,8 @@
 package com.elija.infra.controller;
 
-import com.elija.domain.pizza.PizzaDescription;
-import com.elija.domain.pizza.PizzaName;
-import com.elija.domain.pizza.Price;
+import com.elija.domain.pizza.values.PizzaDescription;
+import com.elija.domain.pizza.values.PizzaName;
+import com.elija.domain.pizza.values.Price;
 import io.vavr.control.Option;
 
 import java.io.Serializable;

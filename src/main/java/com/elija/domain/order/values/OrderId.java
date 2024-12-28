@@ -1,4 +1,4 @@
-package com.elija.domain.order;
+package com.elija.domain.order.values;
 
 public record OrderId(int id) {
     public static OrderId fromInt(int id) {

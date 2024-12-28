@@ -1,6 +1,5 @@
 package com.elija.infra.controller;
 
-import com.elija.domain.address.AddressDescription;
 import lombok.NonNull;
 
 /**
@@ -12,12 +11,4 @@ record AddressDto(
         int zipCode,
         @NonNull String city
 ) {
-    public AddressDescription toCreateAddressCommand(){
-        return new AddressDescription(
-                streetName,
-                houseNumber,
-                zipCode,
-                city
-        );
-    }
 }

@@ -1,8 +1,10 @@
 package com.elija.domain.order;
 
 import com.elija.domain.address.Address;
+import com.elija.domain.order.values.OrderId;
+import com.elija.domain.order.values.OrderState;
 import com.elija.domain.person.Person;
-import com.elija.domain.pizza.PizzaId;
+import com.elija.domain.pizza.values.PizzaId;
 import io.vavr.collection.Map;
 import lombok.NonNull;
 

@@ -1,4 +1,4 @@
-package com.elija.domain.person;
+package com.elija.domain.person.values;
 
 import io.vavr.Tuple;
 import io.vavr.collection.Map;

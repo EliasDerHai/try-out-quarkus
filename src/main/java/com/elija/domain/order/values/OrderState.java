@@ -1,4 +1,4 @@
-package com.elija.domain.order;
+package com.elija.domain.order.values;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

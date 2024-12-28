@@ -1,6 +1,5 @@
-package com.elija.domain.order;
+package com.elija.domain.order.values;
 
-import com.elija.domain.address.AddressDescription;
 import com.elija.domain.address.AddressService;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +8,7 @@ public enum OrderNotPlacedReason {
     /** vendor does not deliver to the specified destination */
     DESTINATION_OUT_OF_DELIVERY_ZONE("destination-out-of-delivery-zone"),
 
-    /** destination cannot be found via {@link AddressService#findLatitudeAndLongitudeForAddress(AddressDescription)} */
+    /** destination cannot be found via {@link AddressService#findLatitudeAndLongitudeForAddress} */
     DESTINATION_UNKNOWN("destination-unknown"),
 
     /** something went wrong while persisting */

@@ -1,4 +1,4 @@
-package com.elija.domain.person;
+package com.elija.domain.person.values;
 
 import java.util.UUID;
 
