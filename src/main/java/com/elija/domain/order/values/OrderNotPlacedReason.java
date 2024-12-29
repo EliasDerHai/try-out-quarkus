@@ -15,4 +15,9 @@ public enum OrderNotPlacedReason {
     PERSISTENCE_ERROR("persistence-error");
 
     private final String value;
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

@@ -53,7 +53,7 @@ public class PlaceOrderFacadeImpl implements PlaceOrderFacade {
                 placeOrderCommand.destination()._4,
                 destinationLatitude,
                 destinationLongitude
-        ); // TODO fix later
+        );
         var customerId = personService.addPerson(
                 placeOrderCommand.orderer()._1,
                 placeOrderCommand.orderer()._2,

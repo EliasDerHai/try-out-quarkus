@@ -21,4 +21,9 @@ public enum UserGroup {
     public static UserGroup fromValue(String userGroup) {
         return lookup.get(userGroup).getOrElseThrow(IllegalArgumentException::new);
     }
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

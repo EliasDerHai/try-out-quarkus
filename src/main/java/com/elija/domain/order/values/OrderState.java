@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum OrderState {
-    /** queued up for chef */
+    /** awaits payment verification - otherwise deleted after X minutes */
+    AWAITING_PAYMENT("awaiting_payment"),
+    /** payment received; queued up for chef */
     PLACED("placed"),
     /** chef is cookin' */
     COOKING("cooking"),
@@ -18,4 +20,9 @@ public enum OrderState {
     LOST("lost");
 
     private final String value;
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }
