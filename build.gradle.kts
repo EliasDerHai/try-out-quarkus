@@ -56,10 +56,13 @@ java {
 
 tasks.withType<Test> {
     systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
+    useJUnitPlatform()
 }
+
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
+    options.setIncremental(true)
 }
 
 flyway {
@@ -109,5 +112,46 @@ tasks.named("generateJooq").configure {
 buildscript {
     dependencies {
         classpath("org.flywaydb:flyway-database-postgresql:11.1.0")
+    }
+}
+
+
+/**
+ * Trying to get a fast unit-test task going, but it seems just impossible without introducing a subproject without
+ * quarkus. The unit-test task should build in ~5s, which is not great but seems to be the best I can do for now.
+ */
+tasks.register<Test>("unitTest") {
+    description = "Runs only the fast unit tests (no Quarkus, Flyway, jOOQ, etc.)"
+    group = "verification"
+    useJUnitPlatform()
+
+    // Explicitly set the test classes and classpath to use the existing 'test' source set.
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+
+    exclude("**/*IT.class")
+
+    doFirst {
+        println("Running fast unit tests only (skip Quarkus/Flyway/jOOQ) ...")
+    }
+}
+
+listOf(
+        "processResources",
+        "quarkusGenerateAppModel",
+        "quarkusGenerateDevAppModel",
+        "quarkusGenerateCodeDev",
+        "quarkusGenerateCode",
+        "flywayMigrate",
+        "generateJooq",
+        "compileQuarkusTestGeneratedSourcesJava",
+        "quarkusGenerateTestAppModel",
+        "quarkusGenerateCodeTests",
+        "processTestResources"
+).forEach { t ->
+    tasks.named(t).configure {
+        onlyIf {
+            !gradle.startParameter.taskNames.contains("unitTest")
+        }
     }
 }
