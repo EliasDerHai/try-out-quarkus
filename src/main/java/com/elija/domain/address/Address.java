@@ -4,7 +4,7 @@ import com.elija.domain.address.values.*;
 import lombok.NonNull;
 
 /**
- * @param house is non-numeric since "2A" etc. is possible
+ * An Address fully describes a physical location in the context of pizza-delivery.
  */
 public record Address(
         @NonNull AddressId id,
