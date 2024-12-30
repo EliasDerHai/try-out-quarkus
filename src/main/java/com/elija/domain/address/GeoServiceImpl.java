@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Singleton
 @RequiredArgsConstructor
-public class AddressServiceImpl implements AddressService {
-    private final AddressRepository addressRepository;
+public class GeoServiceImpl implements GeoService {
 
     @Override
     public Option<Tuple2<Latitude, Longitude>> findLatitudeAndLongitudeForAddress(
@@ -24,25 +23,6 @@ public class AddressServiceImpl implements AddressService {
                 .map(Latitude::fromDouble, Longitude::fromDouble);
 
         return Option.of(latitudeLongitude);
-    }
-
-    @Override
-    public Option<AddressId> createAddress(
-            Street street,
-            House house,
-            ZipCode zipCode,
-            City city,
-            Latitude latitude,
-            Longitude longitude
-    ) {
-        return addressRepository.saveAddress(
-                street,
-                house,
-                zipCode,
-                city,
-                latitude,
-                longitude
-        );
     }
 
     /**

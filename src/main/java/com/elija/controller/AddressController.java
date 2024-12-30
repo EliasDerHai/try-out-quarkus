@@ -1,4 +1,4 @@
-package com.elija.infra.controller;
+package com.elija.controller;
 
 import com.elija.domain.address.Address;
 import lombok.NonNull;

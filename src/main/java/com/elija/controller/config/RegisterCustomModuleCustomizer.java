@@ -1,4 +1,4 @@
-package com.elija.config;
+package com.elija.controller.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.jackson.ObjectMapperCustomizer;

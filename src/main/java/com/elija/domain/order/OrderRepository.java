@@ -6,10 +6,11 @@ import com.elija.domain.order.values.OrderState;
 import com.elija.domain.person.values.PersonId;
 import com.elija.domain.pizza.values.PizzaId;
 import io.vavr.collection.Map;
+import io.vavr.collection.Set;
 import io.vavr.control.Option;
 
 public interface OrderRepository {
-    Option<OrderId> saveOrder(
+    Option<OrderId> save(
             Map<PizzaId, Integer> pizzaIdWithQuantity,
             AddressId destination,
             PersonId orderer,
@@ -17,4 +18,8 @@ public interface OrderRepository {
             PersonId deliveryDriver,
             OrderState orderState
     );
+
+    Option<Order> find(OrderId orderId);
+
+    Set<Order> findAll();
 }

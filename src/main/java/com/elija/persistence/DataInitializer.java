@@ -1,4 +1,4 @@
-package com.elija.infra.persistence;
+package com.elija.persistence;
 
 import com.elija.domain.person.values.FirstName;
 import com.elija.domain.person.values.LastName;
@@ -8,6 +8,7 @@ import com.elija.domain.pizza.values.PizzaDescription;
 import com.elija.domain.pizza.values.PizzaName;
 import com.elija.domain.pizza.values.Price;
 import io.quarkus.runtime.StartupEvent;
+import io.vavr.control.Try;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.transaction.Transactional;
@@ -20,19 +21,21 @@ import static io.vavr.API.Some;
 @Slf4j
 @ApplicationScoped
 @RequiredArgsConstructor
-public class DataInitializer {
+class DataInitializer {
     private final PizzaRepositoryImpl pizzaRepository;
     private final PersonRepositoryImpl personRepository;
 
     @Transactional
     void onStart(@Observes StartupEvent startupEvent) {
-        var inserts =
-                insertSamplePizzas() + insertSamplePersons();
-        if (inserts == 0) {
-            log.info("Skipped inserts, because all sample data already present");
-        } else {
-            log.info("Sample data was added - {} elements where added", inserts);
-        }
+        Try.run(() -> {
+            var inserts =
+                    insertSamplePizzas() + insertSamplePersons();
+            if (inserts == 0) {
+                log.info("Skipped inserts, because all sample data already present");
+            } else {
+                log.info("Sample data was added - {} elements where added", inserts);
+            }
+        }).onFailure(e -> log.error("{} encountered some issues", this.getClass().getSimpleName(), e));
     }
 
     private int insertSamplePizzas() {
@@ -88,8 +91,8 @@ public class DataInitializer {
 
     private int insertSamplePersons() {
         var inserts = 0;
-        if (personRepository.findPersonByFullName("Parmigiano", "Luigi").isEmpty()) {
-            personRepository.savePerson(
+        if (personRepository.findByFullName("Parmigiano", "Luigi").isEmpty()) {
+            personRepository.save(
                     FirstName.fromString("Luigi"),
                     LastName.fromString("Parmigiano"),
                     PhoneNumber.fromNullableString("1234-567890"),
@@ -97,8 +100,8 @@ public class DataInitializer {
             );
             inserts++;
         }
-        if (personRepository.findPersonByFullName("Parmigiano", "Mario").isEmpty()) {
-            personRepository.savePerson(
+        if (personRepository.findByFullName("Parmigiano", "Mario").isEmpty()) {
+            personRepository.save(
                     FirstName.fromString("Mario"),
                     LastName.fromString("Parmigiano"),
                     PhoneNumber.fromNullableString("0987-654321"),

@@ -12,7 +12,7 @@ public interface PizzaRepository {
 
     Set<Pizza> findAll();
 
-    Option<Pizza> find(int id);
+    Option<Pizza> find(PizzaId id);
 
     Option<Pizza> findByName(String name);
 }

@@ -1,8 +1,9 @@
-package com.elija.infra.controller;
+package com.elija.controller;
 
 import com.elija.domain.pizza.Pizza;
 import com.elija.domain.pizza.PizzaRepository;
 import com.elija.domain.pizza.values.PizzaDescription;
+import com.elija.domain.pizza.values.PizzaId;
 import com.elija.domain.pizza.values.PizzaName;
 import com.elija.domain.pizza.values.Price;
 import io.vavr.collection.Set;
@@ -33,7 +34,7 @@ class PizzaController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOne(@PathParam("id") int id) {
-        return pizzaRepository.find(id)
+        return pizzaRepository.find(PizzaId.fromInt(id))
                 .map(GetPizzaDto::fromPizza)
                 .map(p -> Response.ok(p).build())
                 .getOrElse(Response.status(404).build());

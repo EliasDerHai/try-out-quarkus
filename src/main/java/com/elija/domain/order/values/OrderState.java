@@ -1,5 +1,8 @@
 package com.elija.domain.order.values;
 
+import io.vavr.Tuple;
+import io.vavr.collection.Map;
+import io.vavr.collection.Vector;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +23,16 @@ public enum OrderState {
     LOST("lost");
 
     private final String value;
+
+
+
+    private static final Map<String, OrderState> lookup = Vector
+            .of(OrderState.values())
+            .toMap(v -> Tuple.of(v.value, v));
+
+    public static OrderState fromValue(String orderState) {
+        return lookup.get(orderState).getOrElseThrow(IllegalArgumentException::new);
+    }
 
     @Override
     public String toString() {

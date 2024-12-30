@@ -1,4 +1,4 @@
-package com.elija.infra.persistence;
+package com.elija.persistence;
 
 import com.elija.domain.pizza.Pizza;
 import com.elija.domain.pizza.PizzaRepository;
@@ -26,39 +26,44 @@ class PizzaRepositoryImpl implements PizzaRepository {
             PizzaName pizzaName,
             PizzaDescription pizzaDescription,
             Price price
-    ){
+    ) {
         return Option.of(dsl.insertInto(PIZZA)
                         .set(PIZZA.NAME, pizzaName.value())
                         .set(PIZZA.DESCRIPTION, pizzaDescription.toNullableString())
                         .set(PIZZA.PRICE, price.inEuroCent())
                         .returning(PIZZA.ID)
-                        .fetchOne()
-                )
+                        .fetchOne())
                 .map(PizzaRecord::getId)
                 .map(PizzaId::fromInt);
     }
 
     @Override
     public Set<Pizza> findAll() {
-        return HashSet.ofAll(dsl.select().from(PIZZA).fetch())
-                .map(PizzaRepositoryImpl::recordToPizza);
+        return HashSet.ofAll(dsl
+                        .selectFrom(PIZZA)
+                        .fetch())
+                .map(PizzaRepositoryImpl::getPizzaFromRecord);
     }
 
     @Override
-    public Option<Pizza> find(int id) {
-        return Option
-                .of(dsl.select().from(PIZZA).where(PIZZA.ID.eq(id)).fetchOne())
-                .map(PizzaRepositoryImpl::recordToPizza);
+    public Option<Pizza> find(PizzaId id) {
+        return Option.of(dsl
+                        .selectFrom(PIZZA)
+                        .where(PIZZA.ID.eq(id.toInt()))
+                        .fetchOne())
+                .map(PizzaRepositoryImpl::getPizzaFromRecord);
     }
 
     @Override
     public Option<Pizza> findByName(String name) {
-        return Option
-                .of(dsl.select().from(PIZZA).where(PIZZA.NAME.eq(name)).fetchOne())
-                .map(PizzaRepositoryImpl::recordToPizza);
+        return Option.of(dsl
+                        .selectFrom(PIZZA)
+                        .where(PIZZA.NAME.eq(name))
+                        .fetchOne())
+                .map(PizzaRepositoryImpl::getPizzaFromRecord);
     }
 
-    private static Pizza recordToPizza(org.jooq.Record record) {
+    public static Pizza getPizzaFromRecord(PizzaRecord record) {
         return new Pizza(
                 PizzaId.fromInt(record.get(PIZZA.ID)),
                 PizzaName.fromString(record.get(PIZZA.NAME)),

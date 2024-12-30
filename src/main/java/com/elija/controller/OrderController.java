@@ -1,22 +1,22 @@
-package com.elija.infra.controller;
+package com.elija.controller;
 
 import com.elija.domain.address.values.City;
 import com.elija.domain.address.values.House;
 import com.elija.domain.address.values.Street;
 import com.elija.domain.address.values.ZipCode;
 import com.elija.domain.order.Order;
+import com.elija.domain.order.OrderRepository;
 import com.elija.domain.order.PlaceOrderCommand;
 import com.elija.domain.order.PlaceOrderFacade;
+import com.elija.domain.order.values.OrderId;
 import com.elija.domain.person.values.FirstName;
 import com.elija.domain.person.values.LastName;
 import com.elija.domain.person.values.PhoneNumber;
 import com.elija.domain.pizza.values.PizzaId;
 import io.vavr.Tuple;
 import io.vavr.collection.HashMap;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import io.vavr.collection.Set;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
@@ -31,6 +31,24 @@ class OrderController {
     public static final String ORDER_URI = "/order";
 
     private final PlaceOrderFacade placeOrderFacade;
+    private final OrderRepository orderRepository;
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<OrderController.GetOrderDto> getAll() {
+        return orderRepository.findAll()
+                .map(OrderController.GetOrderDto::fromOrder);
+    }
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOne(@PathParam("id") int id) {
+        return orderRepository.find(OrderId.fromInt(id))
+                .map(OrderController.GetOrderDto::fromOrder)
+                .map(p -> Response.ok(p).build())
+                .getOrElse(Response.status(404).build());
+    }
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

@@ -1,4 +1,4 @@
-package com.elija.infra.controller;
+package com.elija.controller;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

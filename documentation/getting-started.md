@@ -1,11 +1,19 @@
-Requirements: 
+## Requirements: 
  - postgres 16+ (with database named 'try_out_jooq' or modify ./application.yml)
  - java 17+
 
+and then just:
+```shell script
+./gradlew quarkusDev
+```
+
+That's it.
+
+**⬇⬇ Here are some more tasks to toy around with (mostly the quarkus boilerplate readme... ) ⬇⬇**
+
 ## Database
 
-For generating jOOQ classes run:
-
+jOOQ classes are generated after flyway with each bootup but you can also manually run them with:
 ```shell script
 ./gradlew generateJooq
 ```

@@ -1,5 +1,6 @@
-package com.elija.infra.persistence;
+package com.elija.persistence;
 
+import com.elija.domain.address.Address;
 import com.elija.domain.address.AddressRepository;
 import com.elija.domain.address.values.*;
 import com.elija.generated.tables.records.AddressRecord;
@@ -12,7 +13,7 @@ import static com.elija.generated.Tables.ADDRESS;
 
 @Singleton
 @RequiredArgsConstructor
-public class AddressRepositoryImpl implements AddressRepository {
+class AddressRepositoryImpl implements AddressRepository {
     private final DSLContext dsl;
 
     @Override
@@ -35,5 +36,17 @@ public class AddressRepositoryImpl implements AddressRepository {
                         .fetchOne())
                 .map(AddressRecord::getId)
                 .map(AddressId::fromInt);
+    }
+
+    public static Address getAddressFromRecord(AddressRecord record) {
+        return new Address(
+                AddressId.fromInt(record.get(ADDRESS.ID)),
+                Street.fromString(record.get(ADDRESS.STREET_NAME)),
+                House.fromString(record.get(ADDRESS.HOUSE_NUMBER)),
+                ZipCode.fromInteger(record.get(ADDRESS.ZIP_CODE)),
+                City.fromString(record.get(ADDRESS.CITY)),
+                Latitude.fromDouble(record.get(ADDRESS.LATITUDE)),
+                Longitude.fromDouble(record.get(ADDRESS.LONGITUDE))
+        );
     }
 }
