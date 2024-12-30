@@ -65,10 +65,10 @@ class PizzaRepositoryImpl implements PizzaRepository {
 
     public static Pizza getPizzaFromRecord(PizzaRecord record) {
         return new Pizza(
-                PizzaId.fromInt(record.get(PIZZA.ID)),
-                PizzaName.fromString(record.get(PIZZA.NAME)),
-                PizzaDescription.fromNullableString(record.get(PIZZA.DESCRIPTION)),
-                Price.fromEuroCents(record.get(PIZZA.PRICE))
+                PizzaId.fromInt(record.getId()),
+                PizzaName.fromString(record.getName()),
+                PizzaDescription.fromNullableString(record.getDescription()),
+                Price.fromEuroCents(record.getPrice())
         );
     }
 }

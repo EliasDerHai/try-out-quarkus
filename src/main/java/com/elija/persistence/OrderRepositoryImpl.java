@@ -102,7 +102,7 @@ class OrderRepositoryImpl implements OrderRepository {
     private Address getDestination(CustomerOrderRecord record) {
         return Option.of(dslContext
                         .selectFrom(ADDRESS)
-                        .where(ADDRESS.ID.eq(record.get(CUSTOMER_ORDER.DESTINATION)))
+                        .where(ADDRESS.ID.eq(record.getDestination()))
                         .fetchOne())
                 .map(AddressRepositoryImpl::getAddressFromRecord)
                 .get();// safe bc of fk-constraint
@@ -124,8 +124,8 @@ class OrderRepositoryImpl implements OrderRepository {
                                 .where(CUSTOMER_ORDER_PIZZA.ORDER_ID.eq(orderId))
                                 .fetch())
                 .toMap(orderDetail -> Tuple.of(
-                        PizzaId.fromInt(orderDetail.get(CUSTOMER_ORDER_PIZZA.PIZZA_ID)),
-                        orderDetail.get(CUSTOMER_ORDER_PIZZA.QUANTITY)
+                        PizzaId.fromInt(orderDetail.getPizzaId()),
+                        orderDetail.getQuantity()
                 ));
     }
 }

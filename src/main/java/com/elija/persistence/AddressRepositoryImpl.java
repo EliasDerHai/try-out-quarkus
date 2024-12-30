@@ -25,13 +25,16 @@ class AddressRepositoryImpl implements AddressRepository {
             Latitude latitude,
             Longitude longitude
     ) {
+        var insertion = new AddressRecord();
+        insertion.setCity(city.toString());
+        insertion.setZipCode(zipCode.toInt());
+        insertion.setStreetName(street.toString());
+        insertion.setHouseNumber(house.toString());
+        insertion.setLatitude(latitude.toDouble());
+        insertion.setLongitude(longitude.toDouble());
+
         return Option.of(dsl.insertInto(ADDRESS)
-                        .set(ADDRESS.CITY, city.toString())
-                        .set(ADDRESS.ZIP_CODE, zipCode.toInt())
-                        .set(ADDRESS.STREET_NAME, street.toString())
-                        .set(ADDRESS.HOUSE_NUMBER, house.toString())
-                        .set(ADDRESS.LATITUDE, latitude.toDouble())
-                        .set(ADDRESS.LONGITUDE, longitude.toDouble())
+                        .set(insertion)
                         .returning(ADDRESS.ID)
                         .fetchOne())
                 .map(AddressRecord::getId)
@@ -40,13 +43,13 @@ class AddressRepositoryImpl implements AddressRepository {
 
     public static Address getAddressFromRecord(AddressRecord record) {
         return new Address(
-                AddressId.fromInt(record.get(ADDRESS.ID)),
-                Street.fromString(record.get(ADDRESS.STREET_NAME)),
-                House.fromString(record.get(ADDRESS.HOUSE_NUMBER)),
-                ZipCode.fromInteger(record.get(ADDRESS.ZIP_CODE)),
-                City.fromString(record.get(ADDRESS.CITY)),
-                Latitude.fromDouble(record.get(ADDRESS.LATITUDE)),
-                Longitude.fromDouble(record.get(ADDRESS.LONGITUDE))
+                AddressId.fromInt(record.getId()),
+                Street.fromString(record.getStreetName()),
+                House.fromString(record.getHouseNumber()),
+                ZipCode.fromInteger(record.getZipCode()),
+                City.fromString(record.getCity()),
+                Latitude.fromDouble(record.getLatitude()),
+                Longitude.fromDouble(record.getLongitude())
         );
     }
 }
